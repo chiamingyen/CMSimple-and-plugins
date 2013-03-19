@@ -8,6 +8,8 @@ $module = {
         if(attr==="stdout"){document.$stdout=value}
         if(attr==="stderr"){document.$stderr=value}
         },
-    has_local_storage:typeof(Storage)!=="undefined",
-    version_info:[1,0,"20130111-000752"]
+    has_local_storage:__BRYTHON__.has_local_storage,
+    has_json:__BRYTHON__.has_json,
+    version_info:__BRYTHON__.version_info,
+    path:__BRYTHON__.path
 }

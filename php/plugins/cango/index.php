@@ -3,6 +3,8 @@ function cangoMain(){
 $output = <<<EOF
 <script src="jscript/brython/brython.js"></script>
 <script type="text/python">
+import html
+import svg
 import math
 
 ray = 100
@@ -14,32 +16,32 @@ colors = ["C8E0A2","A6BED1","E4CC85","D7D7D7","90AF97","698EA8",
 panel = doc["panel"]
 legend = None
 
-標題 = SVG.text('',x=150,y=25,
+title = svg.text('',x=150,y=25,
     font_size=22,text_anchor="middle",
     style={"stroke":"black"})
-panel <= 標題
+panel <= title
 
 paths = {}
 
-def 繪製餅圖():
+def pie_chart():
     global paths,legend
     # clear SVG doc
     for child in panel: # iteration on child nodes
-        if child != 標題:
+        if child != title:
             panel.remove(child)
 
     # zone for legend
-    legend = SVG.text('',x=350,y=150,
+    legend = svg.text('',x=350,y=150,
         font_size=20,text_anchor="middle",
         style={"stroke":"black"})
     panel <= legend
 
-    設定標題()
+    set_title()
         
     paths = {}
     data = {}
     for i,cell in enumerate(cells):
-        data['項目 %s' %(i+1)]=float(cell.value)
+        data['Item %s' %(i+1)]=float(cell.text)
     style={"fill-opacity": 1,"stroke":"black","stroke-width": 1}
     width = 3.8*ray
     height = 2.2*ray
@@ -66,14 +68,14 @@ def 繪製餅圖():
         x,y = x_end,y_end
         color = colors[i % len(colors)]
         style["fill"]='#'+color
-        path = SVG.path(d=path,style=style,
+        path = svg.path(d=path,style=style,
             onMouseOver="show_legend('%s')" %key,
             onMouseOut="hide_legend()")
         panel <= path
         paths[key]=path
 
-def 設定標題():
-    標題.text = 標題輸入.value
+def set_title():
+    title.text = title_input.value
     
 def show_legend(key):
     legend.text = key
@@ -81,35 +83,34 @@ def show_legend(key):
 def hide_legend():
     legend.text = ''
 
-def update(cell):
-    try:
-        float(cell.value)
-    except ValueError:
-        alert('Numeric value requested')
-        return
-    繪製餅圖()
+def change(rank,offset):
+    x = int(cells[int(rank)].text)
+    cells[int(rank)].text = x+int(offset)
+    pie_chart()
 
 nb_cols = 2
 nb_lines = 5
 
-t = TABLE()
-tb = TBODY()
+t = html.TABLE()
+tb = html.TBODY()
 cells = []
 
-標題輸入 = INPUT(value='餅形比例圖',onchange="設定標題()")
-tb <= TD('Title')+TD(標題輸入)
+title_input = html.INPUT(value='Pie Chart',onchange="set_title()")
+tb <= html.TD('Title')+html.TD(title_input,colspan=3)
 
 for i in range(nb_lines):
-    row = TR()
-    row <= TD('項目 %s' %i)
-    cell = INPUT(value=values[i],onchange="update(this)")
-    row <= TD(cell)
+    row = html.TR()
+    row <= html.TD('Item %s' %(i+1))
+    row <= html.TD(html.BUTTON('<',onclick="change(%s,-1)" %i))
+    cell = html.SPAN(values[i])
+    row <= html.TD(cell)
+    row <= html.TD(html.BUTTON('>',onclick="change(%s,1)" %i))
     cells.append(cell)
     tb <= row
 t <= tb
 doc['data'] <= t
 
-繪製餅圖()
+pie_chart()
 </script>
 
 </head>

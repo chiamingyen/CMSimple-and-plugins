@@ -20,7 +20,7 @@ width,height = 250,250 # canvas dimensions
 ray = 100 # clock ray 時鐘線
 
 def 指針(angle,r1,r2,color="#000000"):
-    # draw a needle at specified angle in specified color
+    # draw a 指針 at specified angle in specified color
     # r1 and r2 are percentages of clock ray
     x1 = width/2-ray*cos(angle)*r1
     y1 = height/2-ray*sin(angle)*r1
@@ -51,7 +51,7 @@ def set_clock():
     ctx.fillStyle="#FFF"
     ctx.fillText(day,width*0.7,height*0.5)
 
-    # draw needles for hour, minute, seconds    
+    # draw 指針s for hour, minute, seconds    
     ctx.lineWidth = 3
     hour = now.hour%12 + now.minute/60
     angle = hour*2*math.pi/12 - math.pi/2
