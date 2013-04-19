@@ -1,4 +1,7 @@
- var camera, scene, renderer,
+// 將 document.body 換成 renderer.domElement, 讓零件控制只限於 domElement 視窗內
+// 在	function ev_mousewheel(e)  增加 e.preventDefault(); 讓捲動只會縮放零件
+
+var camera, scene, renderer,
     geometry, material, mesh, pointLight;
 	
 	var orgX,orgY;
@@ -25,12 +28,12 @@
 			}
 		orgX=e.clientX;
 		orgY=e.clientY;
-		document.body.addEventListener('mousemove', ev_mousemove, false);
+		renderer.domElement.addEventListener('mousemove', ev_mousemove, false);
 	}
 	function ev_mouseup(e)
 	{
 		e.stopPropagation()
-		document.body.removeEventListener('mousemove', ev_mousemove, false);
+		renderer.domElement.removeEventListener('mousemove', ev_mousemove, false);
 		return false;
 	}
 	function ev_mousemove(e)
@@ -52,6 +55,8 @@
 	}
 	function ev_mousewheel(e)
 	{
+        // 讓捲動只會縮放零件
+        e.preventDefault();
 		e.stopPropagation();
 		if(e.wheelDelta)
 			camera.position.z += e.wheelDelta/2;
@@ -93,10 +98,10 @@
 
 		container.appendChild( renderer.domElement );
 		
-        document.body.addEventListener('mousedown', ev_mousedown, false);
-        document.body.addEventListener('mouseup', ev_mouseup, false);
-        document.body.addEventListener('DOMMouseScroll', ev_mousewheel, false);
-		document.body.addEventListener('mousewheel', ev_mousewheel, false);
+        renderer.domElement.addEventListener('mousedown', ev_mousedown, false);
+        renderer.domElement.addEventListener('mouseup', ev_mouseup, false);
+        renderer.domElement.addEventListener('DOMMouseScroll', ev_mousewheel, false);
+		renderer.domElement.addEventListener('mousewheel', ev_mousewheel, false);
     }
 
     function animate() {
@@ -410,9 +415,9 @@
 		init();
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 		// Great success! All the File APIs are supported.
-			document.body.addEventListener("dragenter", dragenter, false);  
-			document.body.addEventListener("dragover", dragover, false);  
-			document.body.addEventListener("drop", drop, false);  
+			renderer.domElement.addEventListener("dragenter", dragenter, false);  
+			renderer.domElement.addEventListener("dragover", dragover, false);  
+			renderer.domElement.addEventListener("drop", drop, false);  
 		} else {
 		  alert("The File API is needed for this application! Your browser is not supported!");
 		}
