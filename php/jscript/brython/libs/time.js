@@ -1,12 +1,5 @@
 $module =  {
 
-    $norm_str: function(arg,nb){
-        // left padding with 0
-        var res = arg.toString()
-        while(res.length<nb){res = '0'+res}
-        return res
-    },
-
     __getattr__ : function(attr){return this[attr]},
 
     clear_interval : function(int_id){window.clearInterval(int_id)},
@@ -20,7 +13,13 @@ $module =  {
     time : function(){return (new Date()).getTime()},
     
     strftime : function(format,arg){
-        var ns = time.$norm_str
+
+        function ns(arg,nb){
+            // left padding with 0
+            var res = arg.toString()
+            while(res.length<nb){res = '0'+res}
+            return res
+        }
         if(arg){var obj = new Date(arg)}else{var obj=new Date()}
         var res = format
         res = res.replace(/%H/,ns(obj.getHours(),2))

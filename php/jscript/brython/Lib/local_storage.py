@@ -11,9 +11,22 @@ class LocalStorage:
         self.store.removeItem(key)
 
     def __getitem__(self,key):
-        return self.store.getItem(key) or None
+        res=self.store.getItem(key)
+        if res:
+           return res
+
+        raise KeyError(key)
 
     def __setitem__(self,key,value):
         self.store.setItem(key,value)
 
+    #implement "in" functionality
+    def __contains__(self, key):
+        res=self.store.getItem(key)
+        if res:
+           return True
+
+        return False
+
 storage = LocalStorage()
+

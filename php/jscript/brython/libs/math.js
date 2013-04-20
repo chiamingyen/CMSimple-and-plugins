@@ -11,7 +11,7 @@ var isinf=function(x) {
 $module = {
     __getattr__ : function(attr){
         var res = this[attr]
-        if(res===undefined){$raise('AttributeError','module has no attribute '+attr)}
+        if(res===undefined){$raise('AttributeError','module math has no attribute '+attr)}
         return res
     },
     acos: function(x) {return float(Math.acos(float_check(x)))},
