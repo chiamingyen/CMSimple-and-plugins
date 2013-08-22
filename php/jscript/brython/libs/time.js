@@ -10,6 +10,20 @@ $module =  {
 
     set_timeout : function(func,interval){window.setTimeout(func,interval)},
 
+    localtime : function(secs){ 
+       var d=new Date();
+       if (secs === undefined || secs === None) {return d.getTime()}
+
+       // calculate if we are in daylight savings time or not.
+       // borrowed from http://stackoverflow.com/questions/11887934/check-if-daylight-saving-time-is-in-effect-and-if-it-is-for-how-many-hours
+       var jan = new Date(d.getFullYear(), 0, 1);
+       var jul = new Date(d.getFullYear(), 6, 1);
+       var dst=int(d.getTimezoneOffset() < Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset()));
+
+       return list([d.getFullYear(), d.getMonth()+1, d.getDate(), d.getHours(),
+                    d.getMinutes(), d.getSeconds(), d.getDay(), 0, dst])
+       //fixme  (second to last value is 0 which is the number of days in this year..)
+    },
     time : function(){return (new Date()).getTime()},
     
     strftime : function(format,arg){

@@ -36,3 +36,5 @@ kwlist = [
 #--end keywords--
         ]
 
+def iskeyword(word):
+    return word in kwlist

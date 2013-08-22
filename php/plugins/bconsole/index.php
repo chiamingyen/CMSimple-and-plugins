@@ -24,13 +24,19 @@ import time
 import dis
 
 if sys.has_local_storage:
-    import local_storage
+    from local_storage import storage
 else:
     storage = False
 
 def reset_src():
-    if local_storage.storage:
-        doc['src'].value = local_storage.storage["py_src"]
+    if storage and "py_src" in storage:
+       editor.setValue(storage["py_src"])
+
+def write(data):
+    doc["console"].value += str(data)
+
+#sys.stdout = object()    #not needed when importing sys via src/Lib/sys.py
+sys.stdout.write = write
 
 def to_str(xx):
     return str(xx)
@@ -56,15 +62,15 @@ def show_console():
 def clear_text():
     log(" event clear")
     doc['console'].value=''
-    doc['src'].value=''
+    #doc['src'].value=''
 
 def run():
     global output
     doc["console"].value=''
     doc["console"].cols = 60
     src = doc["src"].value
-    if local_storage.storage:
-        local_storage.storage["py_src"]=src
+    if storage:
+        storage["py_src"]=src
     t0 = time.time()
     exec(src)
     output = doc["console"].value

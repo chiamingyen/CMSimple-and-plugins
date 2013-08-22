@@ -8,6 +8,7 @@
  *
  * 
  */
+// 2013.08.21 Yen modified Chrome 檔案銜接錯誤
 
 (function($)
 {
@@ -284,13 +285,23 @@
 					 * Detect support slice method
 					 * if slice is not supported then send all file at once
 					\*==============================================================*/
+/*預計刪除舊的分段方法
 					if (o.mozSlice)				chunk=o.mozSlice(start_byte, end_byte);
 					else if (o.webkitSlice)		chunk=o.webkitSlice(start_byte, end_byte);
 					else if(o.slice)			chunk=o.slice(start_byte, peice);// for this method 2° parameter is length
 					else 						{chunk=o;is_last=1;}//send full file if method not supported
+*/
 
-					
-					/*================================================================================*\
+// 採用以下的檔案分割方法
+//Initialize a new FileReader object
+var reader = new FileReader();
+
+//Slice the file into the desired chunk
+// 特別注意輸入變數從 start_byte 到 end_byte, 以及檔案讀取的格式
+var chunk = o.slice(start_byte, end_byte);
+reader.readAsBinaryString(chunk);
+
+/*================================================================================*\
 					 Prepare xmlhttpreq object for file upload Bind functions and progress
 					\*================================================================================*/
 					var xhr = new XMLHttpRequest();//prepare xhr for upload
@@ -324,7 +335,8 @@
 					xhr.open('POST',finalUrl+'&start='+start_byte,settings.async);//url + async/sync
 					xhr.setRequestHeader('Cache-Control', 'no-cache');
 					xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');//header
-					xhr.setRequestHeader('Content-Type', 'multipart/form-data');//type for upload
+                    // 特別注意標頭必須使用 json utf-8 格式
+                    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
 					xhr.send(chunk);//send request of file 
 				}
 				
