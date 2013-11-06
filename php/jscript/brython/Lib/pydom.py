@@ -79,8 +79,6 @@ class Selector:
       return NodeCollection(_matched_nodes)
 
   def get(self):
-      _matched_nodes=[]
-      
       if self._selector_type=="id":
          _matched_nodes=self._doc.get(id=self._selector)
       elif self._selector_type=="classname":
@@ -89,6 +87,8 @@ class Selector:
          _matched_nodes=self._doc.get(tag=self._selector)
       elif self._selector_type=="selector":
          _matched_nodes=self._doc.get(selector=self._selector)
+      else:
+         _matched_nodes=[]
 
       return NodeCollection(_matched_nodes)
 
@@ -100,6 +100,9 @@ class NodeCollection:
       return len(self._nodes)
 
   def __item__(self, i):
+      return self._nodes[i]
+
+  def __getitem__(self, i):
       return self._nodes[i]
 
   def __add__(self, nodes):
@@ -304,3 +307,13 @@ class NodeCollection:
 
       for _node in self._nodes:
           _node.set_style({'width': width})
+
+def byId(id):
+    _result=doc.get(id=id)
+    return _result[0]
+
+def createCSSClass(csstext):
+    _style=doc.createElement('style')
+    _style.type='text/css'
+    _style.innerHTML = csstext
+    doc.get(tag='head')[0].appendChild(_style)
