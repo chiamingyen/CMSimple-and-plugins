@@ -1,0 +1,1 @@
+#CMSimple $output.=chat();#
